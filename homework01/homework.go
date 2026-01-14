@@ -157,8 +157,18 @@ func PlusOne(digits []int) []int {
 // 给你一个有序数组 nums ，请你原地删除重复出现的元素，使每个元素只出现一次，返回删除后数组的新长度。
 // 不要使用额外的数组空间，你必须在原地修改输入数组并在使用 O(1) 额外空间的条件下完成。
 func RemoveDuplicates(nums []int) int {
-	// TODO: implement
-	return 0
+	if len(nums) <= 1 {
+		return len(nums)
+	}
+	slow := 0
+	for fast := 1; fast < len(nums); fast++ {
+		if nums[slow] != nums[fast] {
+			slow++
+			nums[slow] = nums[fast]
+		}
+
+	}
+	return slow + 1
 }
 
 // 7. 合并区间
