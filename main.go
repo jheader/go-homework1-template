@@ -1,28 +1,46 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+	"time"
+)
 
-func RemoveDuplicates(nums []int) int {
-	if len(nums) <= 1 {
-		return len(nums)
-	}
-	slow := 0
-	for fast := 1; fast < len(nums); fast++ {
-		if nums[slow] != nums[fast] {
-			slow++
-			nums[slow] = nums[fast]
+// 题目 ：编写一个程序，使用 go 关键字启动两个协程，一个协程打印从1到10的奇数，另一个协程打印从2到10的偶数
+func GoOne() int {
+	return 1
+}
+
+func GoTwo() int {
+
+	return 2
+
+}
+
+func GoThree() int {
+
+	return 3
+
+}
+
+func Sum(da []interface{}) error {
+
+	sum := 0
+	for i, _ := range da {
+		f, ok := da[i].(func() int)
+		if ok {
+			sum += f()
+		} else {
+			errors.New("sdf")
 		}
 
 	}
-	return slow + 1
+	fmt.Println("sum:", sum)
+
 }
-
 func main() {
-
-	a := []int{1, 2, 2, 3, 3, 3}
-	le := RemoveDuplicates(a)
-
-	fmt.Println(le)
-	fmt.Println(a[:])
+	a := []interface{}{GoOne(), GoTwo(), GoThree()}
+	go Sum(a)
+	time.Sleep(100 * time.Second)
 
 }
