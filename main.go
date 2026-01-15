@@ -31,15 +31,17 @@ func Sum(da []interface{}) error {
 		if ok {
 			sum += f()
 		} else {
-			errors.New("sdf")
+			return errors.New("sdf")
 		}
 
 	}
 	fmt.Println("sum:", sum)
+	return nil
 
 }
+
 func main() {
-	a := []interface{}{GoOne(), GoTwo(), GoThree()}
+	a := []interface{}{GoOne, GoTwo, GoThree}
 	go Sum(a)
 	time.Sleep(100 * time.Second)
 
