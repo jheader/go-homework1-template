@@ -1,48 +1,34 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"time"
+
+	"github.com/jheader/go-homework1-template/util"
+	"gorm.io/gorm"
 )
 
-// 题目 ：编写一个程序，使用 go 关键字启动两个协程，一个协程打印从1到10的奇数，另一个协程打印从2到10的偶数
-func GoOne() int {
-	return 1
-}
-
-func GoTwo() int {
-
-	return 2
-
-}
-
-func GoThree() int {
-
-	return 3
-
-}
-
-func Sum(da []interface{}) error {
-
-	sum := 0
-	for i, _ := range da {
-		f, ok := da[i].(func() int)
-		if ok {
-			sum += f()
-		} else {
-			return errors.New("sdf")
-		}
-
-	}
-	fmt.Println("sum:", sum)
-	return nil
-
+// 定义测试模型
+type User struct {
+	gorm.Model
+	Name string
+	Age  int
 }
 
 func main() {
-	a := []interface{}{GoOne, GoTwo, GoThree}
-	go Sum(a)
-	time.Sleep(100 * time.Second)
 
+	// 替换为你的 MySQL 连接信息（格式：用户名:密码@tcp(地址:端口)/数据库名?charset=utf8mb4&parseTime=True&loc=Local）
+	//dsn := "root:123456@tcp(192.168.101.36:3306)/test_db?charset=utf8mb4&parseTime=True&loc=Local"
+	//db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
+	db, err := util.NewUtilDB()
+	if err != nil {
+		panic("连接数据库失败: " + err.Error())
+	}
+	// 自动迁移表结构
+	err = db.AutoMigrate(&User{})
+	if err != nil {
+		panic("迁移表失败: " + err.Error())
+	}
+
+	fmt.Println("GORM 安装并连接数据库成功！")
 }
