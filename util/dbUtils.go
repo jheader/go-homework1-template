@@ -88,7 +88,7 @@ func newMySQLDB() (*gorm.DB, error) {
 	loadEnv()
 	dsn := os.Getenv("TEST_MYSQL_DSN")
 	return gorm.Open(mysql.Open(dsn), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Silent),
+		Logger: logger.Default.LogMode(logger.Info),
 
 		// NamingStrategy: Customize table and column naming
 		NamingStrategy: schema.NamingStrategy{

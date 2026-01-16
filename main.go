@@ -3,32 +3,26 @@ package main
 import (
 	"fmt"
 
-	"github.com/jheader/go-homework1-template/util"
-	"gorm.io/gorm"
+	"github.com/jheader/go-homework1-template/homework03"
 )
-
-// 定义测试模型
-type User struct {
-	gorm.Model
-	Name string
-	Age  int
-}
 
 func main() {
 
-	// 替换为你的 MySQL 连接信息（格式：用户名:密码@tcp(地址:端口)/数据库名?charset=utf8mb4&parseTime=True&loc=Local）
-	//dsn := "root:123456@tcp(192.168.101.36:3306)/test_db?charset=utf8mb4&parseTime=True&loc=Local"
-	//db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	user := homework03.User{}
 
-	db, err := util.NewUtilDB()
+	mp := make(map[string]any)
+	// 键：字段名（name）；值：切片[表达式, 参数]
+	mp["name"] = []string{"Alice", "Alice1"}
+	users, err := (&user).SelectPageByMap(1, 3, mp)
 	if err != nil {
-		panic("连接数据库失败: " + err.Error())
-	}
-	// 自动迁移表结构
-	err = db.AutoMigrate(&User{})
-	if err != nil {
-		panic("迁移表失败: " + err.Error())
+		// 错误处理（生产环境建议用日志框架，而非fmt）
+		fmt.Printf("分页查询用户失败：%v\n", err)
+		return // 或根据业务逻辑返回错误、重试等
 	}
 
-	fmt.Println("GORM 安装并连接数据库成功！")
+	// 3. 优化遍历：直接使用元素e，无需索引i
+	for _, user := range users {
+		fmt.Println(user)
+	}
+
 }
