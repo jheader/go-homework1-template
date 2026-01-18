@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/jheader/go-homework1-template/util"
+	"gorm.io/gorm"
 )
 
 type User struct {
@@ -54,4 +55,36 @@ func (u *User) SelectPageByMap(page, size int, mp map[string]any) ([]User, error
 
 	return users, nil
 
+}
+
+func SelectByAgeRang(minAge, maxAge int) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Where("age BETWEEN ? AND ?", minAge, maxAge)
+	}
+
+}
+
+func GetYoungUsersWithPage(page, pageSize, mixAge, maxAge int) ([]User, int64, error) {
+
+	db, err := util.NewUtilDB()
+	if err != nil {
+		return nil, 0, errors.New("连接数据库失败: " + err.Error())
+
+	}
+	var (
+		total int64
+		users []User
+	)
+
+	// 1. 先查询总条数（不包含 Limit/Offset）
+	if err := db.Model(&User{}).Scopes(SelectByAgeRang(mixAge, maxAge)).Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+
+	// 2. 执行分页查询：精确条件 + youngUsers + 分页
+	if err := db.Scopes(SelectByAgeRang(mixAge, maxAge), util.Paginate(page, pageSize)).Find(&users).Error; err != nil {
+		return nil, 0, err
+	}
+
+	return users, total, nil
 }

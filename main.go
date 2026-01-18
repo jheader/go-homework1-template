@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/jheader/go-homework1-template/homework03"
+	homework03 "github.com/jheader/go-homework1-template/homeworkgorm03"
 )
 
 func main() {
